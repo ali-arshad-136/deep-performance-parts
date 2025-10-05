@@ -3,9 +3,10 @@
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
-import { Star, Zap, Palette, Eye, Wrench } from "lucide-react"
+import { Star, Zap, Palette, Eye, Wrench, Lightbulb, Wheel, Settings, Car, Circle, Cpu } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { ProductCard } from "@/components/product-card"
+import { categories } from "@/lib/categories"
 
 const mostPurchased = [
   {
@@ -47,6 +48,24 @@ export default function HomePage() {
     router.push("/catalog")
   }
 
+  const handleCategoryClick = (categoryId: string) => {
+    router.push(`/catalog?category=${categoryId}`)
+  }
+
+  // Get icon component for category
+  const getIcon = (iconName: string) => {
+    const iconMap: Record<string, any> = {
+      Lightbulb,
+      Wheel,
+      Zap,
+      Settings,
+      Car,
+      Circle,
+      Cpu
+    }
+    return iconMap[iconName] || Car
+  }
+
   return (
     <div className="min-h-screen bg-black text-white">
       <Header />
@@ -71,6 +90,48 @@ export default function HomePage() {
                 onClick={handleFindModule}
               >
                 Find your suitable module now
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        {/* Categories Section */}
+        <section className="py-16 bg-gray-800">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-4xl font-bold text-white mb-4">Shop by Category</h2>
+              <p className="text-gray-400 max-w-2xl mx-auto">
+                Find the perfect performance parts for your BMW. From lighting upgrades to complete body kits.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+              {categories.map((category) => {
+                const IconComponent = getIcon(category.icon)
+                return (
+                  <div
+                    key={category.id}
+                    className="bg-gray-900 p-6 rounded-lg hover:bg-gray-700 transition-colors cursor-pointer group"
+                    onClick={() => handleCategoryClick(category.id)}
+                  >
+                    <div className="text-center">
+                      <div className="bg-yellow-400/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-yellow-400/20 transition-colors">
+                        <IconComponent className="h-8 w-8 text-yellow-400" />
+                      </div>
+                      <h3 className="font-semibold mb-2 text-white">{category.name}</h3>
+                      <p className="text-gray-400 text-sm">{category.description}</p>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+
+            <div className="text-center mt-12">
+              <Button
+                className="bg-yellow-400 text-black hover:bg-yellow-500 px-8 py-3 font-semibold"
+                onClick={handleFindModule}
+              >
+                View All Products
               </Button>
             </div>
           </div>
